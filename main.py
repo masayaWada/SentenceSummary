@@ -5,6 +5,7 @@ from pysummarization.tokenizabledoc.mecab_tokenizer import MeCabTokenizer
 from pysummarization.abstractabledoc.top_n_rank_abstractor import TopNRankAbstractor
 import argparse
 import os
+from datetime import datetime
 
 
 class ImprovedSummarizer:
@@ -112,8 +113,8 @@ def main():
     parser = argparse.ArgumentParser(description='日本語テキスト要約システム')
     parser.add_argument('--input', '-i', default='./test/インプット.txt',
                         help='入力ファイルのパス')
-    parser.add_argument('--output', '-o', default='./test/アウトプット.txt',
-                        help='出力ファイルのパス')
+    parser.add_argument('--output', '-o', default='',
+                        help='出力ファイルのパス（指定しない場合は自動生成）')
     parser.add_argument('--granularity', '-g', choices=['fine', 'medium', 'coarse'], default='medium',
                         help='要約の粒度レベル (fine: 詳細, medium: 中程度, coarse: 粗い)')
     parser.add_argument('--similarity_limit', '-s', type=float, default=0.3,
@@ -156,12 +157,22 @@ def main():
         improved_summary = summarizer.post_process_summary(
             summary_sentences, document)
 
+        # 出力ファイル名の自動生成（実行時間を含む）
+        if not args.output:
+            current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
+            input_filename = os.path.splitext(os.path.basename(args.input))[0]
+            output_filename = f"要約結果_{input_filename}_{args.granularity}_{current_time}.txt"
+            output_path = output_filename  # 実行ディレクトリの直下
+        else:
+            output_path = args.output
+
         # 結果出力
         output_content = f"""=== 要約結果 ===
 粒度レベル: {args.granularity}
 目標文数: {target_sentences}
 実際の文数: {len(improved_summary)}
 類似性閾値: {args.similarity_limit}
+実行時刻: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
 
 【要約】
 {chr(10).join(improved_summary)}
@@ -170,10 +181,10 @@ def main():
 【要約率】: {len(improved_summary) / len(document.split('。')) * 100:.1f}%
 """
 
-        with open(args.output, mode='w', encoding='utf-8') as f:
+        with open(output_path, mode='w', encoding='utf-8') as f:
             f.write(output_content)
 
-        print(f"要約完了！出力ファイル: {args.output}")
+        print(f"要約完了！出力ファイル: {output_path}")
         print(f"要約文数: {len(improved_summary)} / {len(document.split('。'))}")
         print(
             f"要約率: {len(improved_summary) / len(document.split('。')) * 100:.1f}%")
