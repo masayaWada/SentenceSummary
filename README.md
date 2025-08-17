@@ -6,6 +6,12 @@
 
 ## 主な機能
 
+### 🖥️ **GUIアプリケーション**
+- **直感的な操作**: ドラッグ&ドロップでファイル選択
+- **リアルタイム表示**: 要約結果を即座に確認
+- **パラメータ調整**: スライダーやドロップダウンで簡単設定
+- **テキスト編集**: 入力テキストを直接編集可能
+
 ### 🎯 **粒度調整機能**
 - **FINE（詳細）**: 多くの文を含む詳細な要約（要約率: 約40%）
 - **MEDIUM（中程度）**: バランスの取れた要約（要約率: 約25%）
@@ -57,19 +63,37 @@ python -c "from pysummarization.tokenizabledoc.mecab_tokenizer import MeCabToken
 
 ## 使用方法
 
-### 基本的な使用方法
+### 1. GUIアプリケーション（推奨）
+
+最も使いやすい方法です。グラフィカルなインターフェースで直感的に操作できます。
+
+```bash
+# GUIアプリケーションを起動
+python gui_app.py
+```
+
+**GUIの主な機能:**
+- 📁 **ファイル選択**: ドラッグ&ドロップでファイルを選択
+- ⚙️ **パラメータ調整**: スライダーやドロップダウンで簡単設定
+- 📝 **テキスト編集**: 入力テキストを直接編集可能
+- 📊 **リアルタイム表示**: 要約結果を即座に表示
+- 💾 **自動保存**: 実行時間を含むファイル名で自動保存
+
+### 2. コマンドライン
+
+高度なユーザーや自動化に適しています。
 
 ```bash
 # デフォルト設定で要約実行
-python sammary.py
+python main.py
 
 # カスタムファイルパスで実行
-python sammary.py --input "入力ファイル.txt" --output "出力ファイル.txt"
+python main.py --input "入力ファイル.txt" --output "出力ファイル.txt"
 
 # 粒度レベルを指定して実行
-python sammary.py --granularity fine
-python sammary.py --granularity medium
-python sammary.py --granularity coarse
+python main.py --granularity fine
+python main.py --granularity medium
+python main.py --granularity coarse
 ```
 
 ### コマンドラインオプション
@@ -87,13 +111,13 @@ python sammary.py --granularity coarse
 
 ```bash
 # 詳細な要約を生成
-python sammary.py --granularity fine --input "長文.txt" --output "要約_詳細.txt"
+python main.py --granularity fine --input "長文.txt" --output "要約_詳細.txt"
 
 # 粗い要約を生成（類似性フィルターを厳しく）
-python sammary.py --granularity coarse --similarity_limit 0.2 --input "長文.txt" --output "要約_要点.txt"
+python main.py --granularity coarse --similarity_limit 0.2 --input "長文.txt" --output "要約_要点.txt"
 
 # カスタム文数範囲で要約
-python sammary.py --min_sentences 5 --max_sentences 15 --input "長文.txt" --output "要約_カスタム.txt"
+python main.py --min_sentences 5 --max_sentences 15 --input "長文.txt" --output "要約_カスタム.txt"
 ```
 
 ## 出力形式
@@ -122,8 +146,10 @@ python sammary.py --min_sentences 5 --max_sentences 15 --input "長文.txt" --ou
 ### 使用ライブラリ
 - **pysummarization**: 要約アルゴリズムの実装
 - **MeCab**: 日本語形態素解析
+- **tkinter**: GUIアプリケーション（Python標準ライブラリ）
 - **argparse**: コマンドライン引数の処理
 - **os**: ファイル操作
+- **datetime**: 日時処理
 
 ### アルゴリズム
 1. **前処理**: テキストの読み込みと結合
@@ -212,6 +238,12 @@ else:
 4. プルリクエストを作成
 
 ## 更新履歴
+
+- **v1.1.0**: GUIアプリケーション追加
+  - グラフィカルなユーザーインターフェース
+  - 直感的なパラメータ調整
+  - リアルタイム要約結果表示
+  - ファイル名自動生成機能
 
 - **v1.0.0**: 初期リリース
   - 基本的な要約機能
